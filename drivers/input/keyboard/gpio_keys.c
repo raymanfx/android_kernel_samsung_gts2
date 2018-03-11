@@ -451,7 +451,6 @@ static void gpio_keys_gpio_report_event(struct gpio_button_data *bdata)
 	int state = (gpio_get_value_cansleep(button->gpio) ? 1 : 0) ^ button->active_low;
 	struct irq_desc *desc = irq_to_desc(gpio_to_irq(button->gpio));
 
-#if !defined(CONFIG_SAMSUNG_PRODUCT_SHIP)
 	if ((button->code == KEY_POWER)) {
 		printk(KERN_INFO "GPIO-KEY : PWR key is %s[%d]\n",
 					state ? "pressed" : "released", irqd_is_wakeup_set(&desc->irq_data));
@@ -473,13 +472,6 @@ static void gpio_keys_gpio_report_event(struct gpio_button_data *bdata)
 		printk(KERN_INFO "GPIO-KEY : VOL_DOWN key is %s[%d]\n",
 					state ? "pressed" : "released", irqd_is_wakeup_set(&desc->irq_data));
 	}
-#else
-	if ((button->code == KEY_POWER) && !!state) {
-		printk(KERN_INFO "GPIO-KEY : key is pressed!!\n");
-	} else if ((button->code == KEY_HOMEPAGE) && !!state) {
-		printk(KERN_INFO "GPIO-KEY : key is pressed!\n");
-	}
-#endif
 
 	if (type == EV_ABS) {
 		if (state)
